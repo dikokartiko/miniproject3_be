@@ -1,9 +1,14 @@
-// models/User.js
+// models/Cashier.js
 const bcrypt = require("bcrypt");
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define("User", {
+  const Cashier = sequelize.define("Cashier", {
     username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
@@ -12,21 +17,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+    status: {
+      type: DataTypes.ENUM("active", "disabled"),
+      defaultValue: "active",
     },
   });
 
-  User.beforeCreate(async (user) => {
+  Cashier.beforeCreate(async (cashier) => {
     const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
+    cashier.password = await bcrypt.hash(cashier.password, salt);
   });
 
-  User.prototype.validPassword = async function (password) {
+  Cashier.prototype.validPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
   };
 
-  return User;
+  return Cashier;
 };
