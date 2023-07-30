@@ -11,6 +11,7 @@ const isAdmin = require("../middleware/isAdmin");
 
 const router = express.Router();
 
+//create
 router.post(
   "/",
   [body("name").notEmpty().withMessage("Name is required")],
@@ -19,6 +20,7 @@ router.post(
   createCategory
 );
 
+// update
 router.put(
   "/:id",
   [body("name").optional().notEmpty().withMessage("Name cannot be empty")],
@@ -27,6 +29,7 @@ router.put(
   updateCategory
 );
 
+//delete
 router.delete("/:id", isAdmin, deleteCategory);
 
 module.exports = router;
