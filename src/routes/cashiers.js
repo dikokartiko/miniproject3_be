@@ -6,6 +6,7 @@ const {
   updateCashier,
   deleteCashier,
   getCashiers,
+  getallCashiers,
 } = require("../controllers/cashiers");
 const validateRequest = require("../middleware/validateRequest");
 const isAdmin = require("../middleware/isAdmin");
@@ -51,6 +52,7 @@ router.put(
 );
 
 router.get("/", isAdmin, getCashiers);
+router.get("/all", isAdmin, getallCashiers);
 router.delete("/delete/:id", isAdmin, deleteCashier);
 
 module.exports = router;

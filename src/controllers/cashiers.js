@@ -1,6 +1,6 @@
 // controllers/cashiers.js
 const bcrypt = require("bcrypt");
-const { User, Role } = require("../models");
+const { User, Role, Status } = require("../models");
 
 exports.createCashier = async (req, res) => {
   const { username, email, password, statusId } = req.body;
@@ -85,6 +85,20 @@ exports.getCashiers = async (req, res) => {
       include: [Role, Status],
     });
 
+    res.send(cashiers);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "An error occurred while getting the cashiers" });
+  }
+};
+
+exports.getallCashiers = async (req, res) => {
+  try {
+    const cashiers = await User.findAll({
+      where: { roleId: 2 },
+      include: Role,
+    });
     res.send(cashiers);
   } catch (error) {
     res
