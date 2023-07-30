@@ -7,7 +7,12 @@ const {
   handleResetPassword,
 } = require("../controllers/auth");
 const validateRequest = require("../middleware/validateRequest");
-
+const {
+  updateProfilePicture,
+  getProfilePicture,
+} = require("../controllers/avatar");
+const upload = require("../middleware/upload");
+const authenticate = require("../middleware/authenticate");
 const router = express.Router();
 
 router.post(
@@ -41,5 +46,14 @@ router.post(
   validateRequest,
   handleResetPassword
 );
+
+router.put(
+  "/profile-picture",
+  authenticate,
+  upload.single("avatar"),
+  updateProfilePicture
+);
+
+router.get("/profile-picture", authenticate, getProfilePicture);
 
 module.exports = router;

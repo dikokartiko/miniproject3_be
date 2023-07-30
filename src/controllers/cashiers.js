@@ -1,5 +1,6 @@
 // controllers/cashiers.js
-const { User } = require("../models");
+const bcrypt = require("bcrypt");
+const { User, Role } = require("../models");
 
 exports.createCashier = async (req, res) => {
   const { username, email, password } = req.body;
@@ -29,7 +30,10 @@ exports.updateCashier = async (req, res) => {
 
     if (username) cashier.username = username;
     if (email) cashier.email = email;
-    if (password) cashier.password = password;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      cashier.password = await bcrypt.hash(password, salt);
+    }
     if (status) cashier.status = status;
 
     await cashier.save();
@@ -59,5 +63,19 @@ exports.deleteCashier = async (req, res) => {
     res
       .status(500)
       .send({ error: "An error occurred while deleting the cashier" });
+  }
+};
+
+exports.getCashiers = async (req, res) => {
+  try {
+    const cashiers = await User.findAll({
+      where: { roleId: 2 },
+      include: Role,
+    });
+    res.send(cashiers);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "An error occurred while getting the cashiers" });
   }
 };
