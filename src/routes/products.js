@@ -1,11 +1,7 @@
 // routes/products.js
 const express = require("express");
 const { body, param } = require("express-validator");
-const {
-  createProduct,
-  updateProductStatus,
-  updateProduct,
-} = require("../controllers/products");
+const { createProduct, updateProduct } = require("../controllers/products");
 const validateRequest = require("../middleware/validateRequest");
 const isAdmin = require("../middleware/isAdmin");
 const upload = require("../middleware/upload");
@@ -23,23 +19,15 @@ router.post(
     body("categoryId")
       .isInt({ gt: 0 })
       .withMessage("Category ID must be a positive integer"),
-    body("description").notEmpty().withMessage("Description is required"),
+    body("statusId")
+      .optional()
+      .isInt({ gt: 0 })
+      .withMessage("Status ID must be a positive integer"),
   ],
-  //   validateRequest,
+  // validateRequest,
   isAdmin,
   upload.single("image"),
   createProduct
-);
-
-// active inactive products
-router.put(
-  "/status/:id",
-  [
-    param("id").isInt({ gt: 0 }).withMessage("ID must be a positive integer"),
-    body("status").isIn(["active", "inactive"]).withMessage("Invalid status"),
-  ],
-  isAdmin,
-  updateProductStatus
 );
 
 // updates product
@@ -56,10 +44,15 @@ router.put(
       .optional()
       .isInt({ gt: 0 })
       .withMessage("Category ID must be a positive integer"),
+    body("statusId")
+      .optional()
+      .isInt({ gt: 0 })
+      .withMessage("Status ID must be a positive integer"),
   ],
   validateRequest,
   isAdmin,
   upload.single("image"),
   updateProduct
 );
+
 module.exports = router;
