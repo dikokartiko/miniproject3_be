@@ -3,10 +3,16 @@ const bcrypt = require("bcrypt");
 const { User, Role } = require("../models");
 
 exports.createCashier = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, statusId } = req.body;
 
   try {
-    const cashier = await User.create({ username, email, password, roleId: 2 });
+    const cashier = await User.create({
+      username,
+      email,
+      password,
+      roleId: 2,
+      statusId,
+    });
     res.status(201).send(cashier);
   } catch (error) {
     if (error.name === "SequelizeUniqueConstraintError") {
@@ -20,7 +26,7 @@ exports.createCashier = async (req, res) => {
 
 exports.updateCashier = async (req, res) => {
   const { id } = req.params;
-  const { username, email, password, status } = req.body;
+  const { username, email, password, statusId } = req.body;
 
   try {
     const cashier = await User.findByPk(id);
@@ -34,7 +40,7 @@ exports.updateCashier = async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       cashier.password = await bcrypt.hash(password, salt);
     }
-    if (status) cashier.status = status;
+    if (statusId) cashier.statusId = statusId;
 
     await cashier.save();
     res.send(cashier);
@@ -67,11 +73,18 @@ exports.deleteCashier = async (req, res) => {
 };
 
 exports.getCashiers = async (req, res) => {
+  const { statusId } = req.query;
   try {
+    let whereClause = { roleId: 2 };
+    if (statusId) {
+      whereClause.statusId = statusId;
+    }
+
     const cashiers = await User.findAll({
-      where: { roleId: 2 },
-      include: Role,
+      where: whereClause,
+      include: [Role, Status],
     });
+
     res.send(cashiers);
   } catch (error) {
     res

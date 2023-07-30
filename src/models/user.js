@@ -6,20 +6,14 @@ module.exports = (sequelize, DataTypes) => {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      // unique: true,
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      // unique: true,
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    status: {
-      type: DataTypes.ENUM("active", "disabled"),
-      defaultValue: "active",
     },
     avatar: {
       type: DataTypes.STRING,
@@ -29,6 +23,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       references: {
         model: "Roles",
+        key: "id",
+      },
+    },
+    statusId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Statuses",
         key: "id",
       },
     },
@@ -45,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.belongsTo(models.Role, { foreignKey: "roleId" });
+    User.belongsTo(models.Status, { foreignKey: "statusId" });
   };
 
   return User;

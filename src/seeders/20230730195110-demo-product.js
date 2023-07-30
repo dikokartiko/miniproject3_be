@@ -20,11 +20,33 @@ module.exports = {
         {
           name: "Indomie Rasa Ayam Bawang",
           image: null,
-          price: 19.99,
+          price: 3000,
           description:
             "Indomie Rasa Ayam Bawang memiliki rasa ayam yang lezat dan aroma bawang yang khas. Mie instan ini disajikan dengan bumbu berupa bubuk rasa ayam, minyak bawang, dan bawang goreng. Rasanya yang enak dan praktis dalam penyajiannya menjadikannya pilihan favorit banyak orang.",
           categoryId: 1,
           statusId: 2,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          name: "Aqua Galon",
+          image: null,
+          price: 19.99,
+          description:
+            "Aqua Galon adalah varian Aqua dalam kemasan galon besar yang berisi air mineral sehat dan segar. Aqua Galon umumnya digunakan untuk keperluan rumah tangga, perkantoran, atau acara-acara besar. Kemasan galon ini memastikan pasokan air yang cukup dan praktis.",
+          categoryId: 2,
+          statusId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          name: "Aqua Botol 600ml",
+          image: null,
+          price: 19.99,
+          description:
+            "Aqua Botol 600ml adalah varian Aqua dalam kemasan botol plastik dengan ukuran 600ml. Kemasan ini umumnya dijual di toko-toko dan minimarket, mudah dibawa bepergian, dan menjadi pilihan favorit banyak orang untuk mengatasi kehausan di berbagai kesempatan.",
+          categoryId: 2,
+          statusId: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

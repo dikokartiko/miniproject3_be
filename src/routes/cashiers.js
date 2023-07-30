@@ -18,6 +18,10 @@ router.post(
     body("username").notEmpty().withMessage("Username is required"),
     body("email").isEmail().withMessage("Email must be valid"),
     body("password").notEmpty().withMessage("Password is required"),
+    body("statusId")
+      .optional()
+      .isInt({ gt: 0 })
+      .withMessage("Status ID must be a positive integer"),
   ],
   validateRequest,
   isAdmin,
@@ -36,10 +40,10 @@ router.put(
       .optional()
       .notEmpty()
       .withMessage("Password cannot be empty"),
-    body("status")
+    body("statusId")
       .optional()
-      .isIn(["active", "disabled"])
-      .withMessage("Invalid status"),
+      .isInt({ gt: 0 })
+      .withMessage("Status ID must be a positive integer"),
   ],
   validateRequest,
   isAdmin,

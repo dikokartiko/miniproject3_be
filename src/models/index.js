@@ -12,11 +12,11 @@ const Category = CategoryModel(sequelize, Sequelize);
 const Product = ProductModel(sequelize, Sequelize);
 const Status = StatusModel(sequelize, Sequelize);
 
-User.associate({ Role });
+User.associate({ Role, Status });
 Role.associate({ User });
 Product.associate({ Category, Status });
 Category.associate({ Product });
-Status.associate({ Product });
+Status.associate({ Product, User });
 
 module.exports = {
   sequelize,
