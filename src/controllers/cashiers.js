@@ -1,11 +1,11 @@
 // controllers/cashiers.js
-const { Cashier } = require("../models/cashier");
+const { User } = require("../models");
 
 exports.createCashier = async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
-    const cashier = await Cashier.create({ username, email, password });
+    const cashier = await User.create({ username, email, password, roleId: 2 });
     res.status(201).send(cashier);
   } catch (error) {
     if (error.name === "SequelizeUniqueConstraintError") {
@@ -22,7 +22,7 @@ exports.updateCashier = async (req, res) => {
   const { username, email, password, status } = req.body;
 
   try {
-    const cashier = await Cashier.findByPk(id);
+    const cashier = await User.findByPk(id);
     if (!cashier) {
       return res.status(404).send({ error: "Cashier not found" });
     }
@@ -48,7 +48,7 @@ exports.deleteCashier = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const cashier = await Cashier.findByPk(id);
+    const cashier = await User.findByPk(id);
     if (!cashier) {
       return res.status(404).send({ error: "Cashier not found" });
     }

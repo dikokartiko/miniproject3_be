@@ -7,6 +7,7 @@ const {
   deleteCashier,
 } = require("../controllers/cashiers");
 const validateRequest = require("../middleware/validateRequest");
+const isAdmin = require("../middleware/isAdmin");
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.post(
     body("password").notEmpty().withMessage("Password is required"),
   ],
   validateRequest,
+  isAdmin,
   createCashier
 );
 
@@ -39,9 +41,10 @@ router.put(
       .withMessage("Invalid status"),
   ],
   validateRequest,
+  isAdmin,
   updateCashier
 );
 
-router.delete("/:id", deleteCashier);
+router.delete("/delete/:id", isAdmin, deleteCashier);
 
 module.exports = router;

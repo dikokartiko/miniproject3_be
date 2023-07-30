@@ -6,16 +6,31 @@ module.exports = (sequelize, DataTypes) => {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      // unique: true,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      // unique: true,
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
+    status: {
+      type: DataTypes.ENUM("active", "disabled"),
+      defaultValue: "active",
+    },
+    avatar: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+      allowNull: true,
+    },
+    roleId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Roles",
+        key: "id",
+      },
     },
   });
 
@@ -26,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
 
   User.prototype.validPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
+  };
+
+  User.associate = (models) => {
+    User.belongsTo(models.Role, { foreignKey: "roleId" });
   };
 
   return User;
