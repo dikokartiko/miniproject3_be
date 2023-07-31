@@ -1,15 +1,21 @@
 // controllers/auth.js
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const { User, Status } = require("../models");
 const createTransporter = require("../helpers/email");
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({
+      where: { username },
+      include: Status,
+    });
     if (!user) {
       return res.status(404).send({ error: "User not found" });
+    }
+    if (user.Status.name !== "active") {
+      return res.status(400).send({ error: "User is not active" });
     }
     if (!(await user.validPassword(password))) {
       return res.status(400).send({ error: "Invalid password" });

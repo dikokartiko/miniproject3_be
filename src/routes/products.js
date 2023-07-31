@@ -9,7 +9,7 @@ const {
 const validateRequest = require("../middleware/validateRequest");
 const isAdmin = require("../middleware/isAdmin");
 const upload = require("../middleware/upload");
-
+const authenticate = require("../middleware/authenticate");
 const router = express.Router();
 
 // create products
