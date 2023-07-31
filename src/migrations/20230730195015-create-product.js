@@ -26,6 +26,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+      item: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       categoryId: {
         type: Sequelize.INTEGER,
         references: {

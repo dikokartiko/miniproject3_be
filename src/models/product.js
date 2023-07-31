@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    item: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     categoryId: {
       type: DataTypes.INTEGER,
       references: {

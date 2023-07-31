@@ -1,5 +1,5 @@
 // controllers/categories.js
-const { Category } = require("../models");
+const { Category, Product } = require("../models");
 
 exports.createCategory = async (req, res) => {
   const { name } = req.body;
@@ -50,5 +50,24 @@ exports.deleteCategory = async (req, res) => {
     res
       .status(500)
       .send({ error: "An error occurred while deleting the category" });
+  }
+};
+
+exports.getCategories = async (req, res) => {
+  const { statusId } = req.query;
+
+  try {
+    const categories = await Category.findAll({
+      include: {
+        model: Product,
+        where: statusId ? { statusId } : {},
+      },
+    });
+
+    res.send(categories);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "An error occurred while getting the categories" });
   }
 };

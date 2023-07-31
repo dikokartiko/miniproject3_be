@@ -3,7 +3,7 @@ const { Product, Category } = require("../models");
 const { Op } = require("sequelize");
 
 exports.createProduct = async (req, res) => {
-  const { name, price, categoryId, description, statusId } = req.body;
+  const { name, price, categoryId, description, statusId, item } = req.body;
   const image = req.file ? req.file.path : null;
   try {
     const product = await Product.create({
@@ -13,6 +13,7 @@ exports.createProduct = async (req, res) => {
       categoryId,
       description,
       statusId,
+      item,
     });
     res.status(201).send(product);
   } catch (error) {
@@ -24,7 +25,7 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, price, categoryId, description, statusId } = req.body;
+  const { name, price, categoryId, description, statusId, item } = req.body;
   const image = req.file ? req.file.path : null;
   try {
     const product = await Product.findByPk(id);
@@ -38,6 +39,7 @@ exports.updateProduct = async (req, res) => {
     if (categoryId) product.categoryId = categoryId;
     if (description) product.description = description;
     if (statusId) product.statusId = statusId;
+    if (item) product.item = item;
 
     await product.save();
     res.send(product);
@@ -49,7 +51,7 @@ exports.updateProduct = async (req, res) => {
 };
 
 exports.getProducts = async (req, res) => {
-  const { page = 1, limit = 10, category, name, sort } = req.query;
+  const { page = 1, limit = 10, category, name, sort, statusId } = req.query;
   const offset = (page - 1) * limit;
 
   let whereClause = {};
@@ -58,6 +60,9 @@ exports.getProducts = async (req, res) => {
   }
   if (name) {
     whereClause.name = { [Op.like]: `%${name}%` };
+  }
+  if (statusId) {
+    whereClause.statusId = statusId;
   }
 
   let orderClause = [];
