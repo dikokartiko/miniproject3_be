@@ -1,7 +1,11 @@
 // routes/products.js
 const express = require("express");
 const { body, param } = require("express-validator");
-const { createProduct, updateProduct } = require("../controllers/products");
+const {
+  createProduct,
+  updateProduct,
+  getProducts,
+} = require("../controllers/products");
 const validateRequest = require("../middleware/validateRequest");
 const isAdmin = require("../middleware/isAdmin");
 const upload = require("../middleware/upload");
@@ -55,4 +59,5 @@ router.put(
   updateProduct
 );
 
+router.get("/", authenticate, getProducts);
 module.exports = router;
