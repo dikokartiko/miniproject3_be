@@ -5,6 +5,7 @@ const {
   createCategory,
   updateCategory,
   deleteCategory,
+  getAllCategories,
 } = require("../controllers/categories");
 const validateRequest = require("../middleware/validateRequest");
 const isAdmin = require("../middleware/isAdmin");
@@ -32,4 +33,5 @@ router.put(
 //delete
 router.delete("/:id", isAdmin, deleteCategory);
 
+router.get("/all", isAdmin, getAllCategories);
 module.exports = router;
