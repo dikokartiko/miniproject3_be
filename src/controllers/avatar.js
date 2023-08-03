@@ -4,13 +4,11 @@ const { User } = require("../models");
 
 exports.updateProfilePicture = async (req, res) => {
   const id = req.userId;
-
   try {
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).send({ error: "User not found" });
     }
-
     user.avatar = req.file.path;
     await user.save();
     res.send({ message: "Profile picture updated successfully" });
@@ -22,18 +20,15 @@ exports.updateProfilePicture = async (req, res) => {
 };
 
 exports.getProfilePicture = async (req, res) => {
-    const id = req.userId;
-
+  const id = req.userId;
   try {
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).send({ error: "User not found" });
     }
-
     if (!user.avatar) {
       return res.status(404).send({ error: "Profile picture not found" });
     }
-
     res.sendFile(path.resolve(user.avatar));
   } catch (error) {
     res

@@ -37,11 +37,9 @@ exports.resetPassword = async (req, res) => {
     if (!user) {
       return res.status(404).send({ error: "User not found" });
     }
-    // Generate token
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    // Send email
     const transporter = createTransporter();
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -63,10 +61,7 @@ exports.handleResetPassword = async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.id);
-    if (!user) {
-      return res.status(404).send({ error: "User not found" });
-    }
-    // Update password
+    if (!user) return res.status(404).send({ error: "User not found" });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
     await user.save();
