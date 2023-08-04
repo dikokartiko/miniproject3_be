@@ -15,7 +15,13 @@ const router = express.Router();
 //create
 router.post(
   "/",
-  [body("name").notEmpty().withMessage("Name is required")],
+  [
+    body("name").notEmpty().withMessage("Name is required"),
+    body("statusId")
+      .optional()
+      .isInt({ gt: 0 })
+      .withMessage("Status ID must be a positive integer"),
+  ],
   validateRequest,
   isAdmin,
   createCategory
@@ -24,7 +30,13 @@ router.post(
 // update
 router.put(
   "/:id",
-  [body("name").optional().notEmpty().withMessage("Name cannot be empty")],
+  [
+    body("name").optional().notEmpty().withMessage("Name cannot be empty"),
+    body("statusId")
+      .optional()
+      .isInt({ gt: 0 })
+      .withMessage("Status ID must be a positive integer"),
+  ],
   validateRequest,
   isAdmin,
   updateCategory

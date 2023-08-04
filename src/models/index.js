@@ -19,8 +19,8 @@ const Cart = CartModel(sequelize, Sequelize);
 User.associate({ Role, Status });
 Role.associate({ User });
 Product.associate({ Category, Status });
-Category.associate({ Product });
-Status.associate({ Product, User });
+Category.associate({ Product, Status }); // Update this line
+Status.associate({ Product, User, Category }); // Update this line
 Transaction.associate({ User, Cart }); // Add this line
 Cart.associate({ Product, Transaction }); // Add this line
 

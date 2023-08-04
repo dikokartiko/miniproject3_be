@@ -1,11 +1,11 @@
 // controllers/categories.js
-const { Category } = require("../models");
+const { Category, Product } = require("../models");
 
 exports.createCategory = async (req, res) => {
-  const { name } = req.body;
+  const { name, statusId } = req.body;
 
   try {
-    const category = await Category.create({ name });
+    const category = await Category.create({ name, statusId });
     res.status(201).send(category);
   } catch (error) {
     res
@@ -16,7 +16,7 @@ exports.createCategory = async (req, res) => {
 
 exports.updateCategory = async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const { name, statusId } = req.body;
 
   try {
     const category = await Category.findByPk(id);
@@ -25,6 +25,7 @@ exports.updateCategory = async (req, res) => {
     }
 
     if (name) category.name = name;
+    if (statusId) category.statusId = statusId;
 
     await category.save();
     res.send(category);
@@ -44,6 +45,10 @@ exports.deleteCategory = async (req, res) => {
       return res.status(404).send({ error: "Category not found" });
     }
 
+    // Delete products with the same category
+    await Product.destroy({ where: { categoryId: id } });
+
+    // Delete category
     await category.destroy();
     res.send({ message: "Category deleted successfully" });
   } catch (error) {

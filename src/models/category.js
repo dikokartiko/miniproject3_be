@@ -5,10 +5,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    statusId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Statuses",
+        key: "id",
+      },
+    },
   });
 
   Category.associate = (models) => {
     Category.hasMany(models.Product, { foreignKey: "categoryId" });
+    Category.belongsTo(models.Status, { foreignKey: "statusId" });
   };
 
   return Category;
