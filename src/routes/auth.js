@@ -5,6 +5,7 @@ const {
   login,
   resetPassword,
   handleResetPassword,
+  getUserData,
 } = require("../controllers/auth");
 const validateRequest = require("../middleware/validateRequest");
 const {
@@ -56,4 +57,5 @@ router.put(
 
 router.get("/profile-picture", authenticate, getProfilePicture);
 
+router.get("/", authenticate, getUserData);
 module.exports = router;

@@ -78,3 +78,28 @@ exports.handleResetPassword = async (req, res) => {
       .send({ error: "An error occurred while resetting the password" });
   }
 };
+
+exports.getUserData = async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send({ error: 'Missing authorization header' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.id);
+    if (!user) {
+      return res.status(404).send({ error: 'User not found' });
+    }
+    res.send(user);
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(400).send({ error: 'Token expired' });
+    }
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(400).send({ error: 'Invalid token' });
+    }
+    res.status(500).send({ error: 'An error occurred while getting user data' });
+  }
+};

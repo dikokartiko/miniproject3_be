@@ -36,3 +36,5 @@ exports.getProfilePicture = async (req, res) => {
       .send({ error: "An error occurred while getting the profile picture" });
   }
 };
+
+
