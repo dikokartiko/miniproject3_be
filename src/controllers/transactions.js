@@ -62,3 +62,24 @@ exports.createTransaction = async (req, res) => {
       .send({ error: "An error occurred while creating the transaction" });
   }
 };
+
+exports.getTransactions = async (req, res) => {
+  try {
+    // Retrieve all transactions from database
+    const transactions = await Transaction.findAll({
+      include: [
+        {
+          model: Cart,
+          include: Product,
+        },
+      ],
+    });
+
+    // Return transaction data
+    res.send(transactions);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "An error occurred while getting transaction data" });
+  }
+};

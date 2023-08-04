@@ -1,10 +1,13 @@
 const express = require("express");
 const { body } = require("express-validator");
-const { createTransaction } = require("../controllers/transactions");
+const {
+  createTransaction,
+  getTransactions,
+} = require("../controllers/transactions");
 const validateRequest = require("../middleware/validateRequest");
 const authenticate = require("../middleware/authenticate");
 const router = express.Router();
-
+const isAdmin = require("../middleware/isAdmin");
 router.post(
   "/",
   [
@@ -16,5 +19,7 @@ router.post(
   authenticate,
   createTransaction
 );
+
+router.get("/", isAdmin, getTransactions);
 
 module.exports = router;

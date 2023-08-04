@@ -45,7 +45,7 @@ exports.resetPassword = async (req, res) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Reset Password",
-      text: `Click this link to reset your password: ${process.env.URL}/reset-password/${token}`,
+      text: `Click this link to reset your password: ${process.env.URL}/tupo-dashboard#/auth/resetPassword/${token}`,
     });
     res.send({ message: "Password reset email sent" });
   } catch (error) {
