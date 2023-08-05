@@ -8,7 +8,7 @@ exports.addToCart = async (req, res) => {
     for (const item of items) {
       const { productId, quantity } = item;
       const product = await Product.findByPk(productId);
-      if (!product || product.statusId !== 1)
+      if (!product || !product.statusId)
         return res
           .status(404)
           .send({ error: "Product not found or not active" });

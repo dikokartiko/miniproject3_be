@@ -28,18 +28,14 @@ module.exports = (sequelize, DataTypes) => {
         key: "id",
       },
     },
-    statusId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "Statuses",
-        key: "id",
-      },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   });
 
   Product.associate = (models) => {
     Product.belongsTo(models.Category, { foreignKey: "categoryId" });
-    Product.belongsTo(models.Status, { foreignKey: "statusId" });
   };
 
   return Product;

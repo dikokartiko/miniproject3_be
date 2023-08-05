@@ -23,7 +23,7 @@ router.post(
     body("categoryId")
       .isInt({ gt: 0 })
       .withMessage("Category ID must be a positive integer"),
-    body("statusId")
+    body("status")
       .optional()
       .isInt({ gt: 0 })
       .withMessage("Status ID must be a positive integer"),
@@ -48,7 +48,7 @@ router.put(
       .optional()
       .isInt({ gt: 0 })
       .withMessage("Category ID must be a positive integer"),
-    body("statusId")
+    body("status")
       .optional()
       .isInt({ gt: 0 })
       .withMessage("Status ID must be a positive integer"),

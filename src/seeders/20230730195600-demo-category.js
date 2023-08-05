@@ -6,35 +6,51 @@ module.exports = {
     return queryInterface.bulkInsert(
       "Categories",
       [
-        { name: "Makanan", createdAt: new Date(), updatedAt: new Date() },
-        { name: "Minuman", createdAt: new Date(), updatedAt: new Date() },
+        {
+          name: "Makanan",
+          status: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          name: "Minuman",
+          status: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
         {
           name: "Peralatan Rumah Tangga",
+          status: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Produk Kesehatan",
+          status: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Alat Tulis Kantor",
+          status: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Produk Anak-Anak",
+          status: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Minyak Goreng dan Bumbu Masak",
+          status: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Produk Kebersihan Rumah Tangga",
+          status: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

@@ -27,11 +27,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     statusId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "Statuses",
-        key: "id",
-      },
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   });
 
@@ -46,7 +43,6 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.belongsTo(models.Role, { foreignKey: "roleId" });
-    User.belongsTo(models.Status, { foreignKey: "statusId" });
   };
 
   return User;

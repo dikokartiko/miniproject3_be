@@ -1,6 +1,6 @@
 // controllers/cashiers.js
 const bcrypt = require("bcrypt");
-const { User, Role, Status } = require("../models");
+const { User, Role } = require("../models");
 
 exports.createCashier = async (req, res) => {
   const { username, email, password, statusId } = req.body;
@@ -82,7 +82,7 @@ exports.getCashiers = async (req, res) => {
 
     const cashiers = await User.findAll({
       where: whereClause,
-      include: [Role, Status],
+      include: [Role],
     });
 
     res.send(cashiers);

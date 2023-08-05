@@ -2,10 +2,10 @@
 const { Category, Product } = require("../models");
 
 exports.createCategory = async (req, res) => {
-  const { name, statusId } = req.body;
+  const { name, status } = req.body;
 
   try {
-    const category = await Category.create({ name, statusId });
+    const category = await Category.create({ name, status });
     res.status(201).send(category);
   } catch (error) {
     res
@@ -16,7 +16,7 @@ exports.createCategory = async (req, res) => {
 
 exports.updateCategory = async (req, res) => {
   const { id } = req.params;
-  const { name, statusId } = req.body;
+  const { name, status } = req.body;
 
   try {
     const category = await Category.findByPk(id);
@@ -25,7 +25,7 @@ exports.updateCategory = async (req, res) => {
     }
 
     if (name) category.name = name;
-    if (statusId) category.statusId = statusId;
+    if (status) category.status = status;
 
     await category.save();
     res.send(category);

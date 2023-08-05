@@ -1,6 +1,4 @@
 "use strict";
-
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("Carts", {
@@ -21,21 +19,21 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      price: {
+      totalPrice: {
         type: Sequelize.FLOAT,
         allowNull: false,
-      },
-      transactionId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Transactions",
-          key: "id",
-        },
       },
       cashierId: {
         type: Sequelize.INTEGER,
         references: {
           model: "Users",
+          key: "id",
+        },
+      },
+      transactionId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Transactions",
           key: "id",
         },
       },
@@ -49,8 +47,7 @@ module.exports = {
       },
     });
   },
-
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Users");
+    await queryInterface.dropTable("Carts");
   },
 };

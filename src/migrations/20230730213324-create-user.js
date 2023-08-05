@@ -35,10 +35,6 @@ module.exports = {
       },
       statusId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "Statuses",
-          key: "id",
-        },
       },
       createdAt: {
         allowNull: false,

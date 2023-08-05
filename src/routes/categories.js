@@ -17,7 +17,7 @@ router.post(
   "/",
   [
     body("name").notEmpty().withMessage("Name is required"),
-    body("statusId")
+    body("status")
       .optional()
       .isInt({ gt: 0 })
       .withMessage("Status ID must be a positive integer"),
@@ -32,7 +32,7 @@ router.put(
   "/:id",
   [
     body("name").optional().notEmpty().withMessage("Name cannot be empty"),
-    body("statusId")
+    body("status")
       .optional()
       .isInt({ gt: 0 })
       .withMessage("Status ID must be a positive integer"),
