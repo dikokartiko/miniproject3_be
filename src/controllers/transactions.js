@@ -2,58 +2,42 @@
 const { Transaction, Cart, Product } = require("../models");
 
 exports.createTransaction = async (req, res) => {
-  const { amount, items } = req.body;
+  const { amount } = req.body;
   const cashierId = req.userId;
-
   try {
-    // Get cart items
     const cartItems = await Cart.findAll({
-      where: { cashierId },
+      where: { cashierId, isChecked: true },
       include: Product,
     });
-
-    // Calculate total price
     let totalPrice = 0;
     for (const item of cartItems) {
       totalPrice += item.totalPrice;
     }
-
     if (totalPrice === 0) {
       return res.status(400).send({ error: "cart cant be empty" });
     }
-    // Check if amount is sufficient
     if (amount < totalPrice) {
       return res.status(400).send({ error: "Insufficient amount" });
     }
-
-    // Calculate change
     const change = amount - totalPrice;
-
-    // Create transaction
-    const transaction = await Transaction.create({
-      cashierId,
-      date: new Date(),
-      totalPrice,
-      amount,
-      change,
-    });
-
-    // Create transaction items
-    for (const item of items) {
-      const { productId, quantity, pricePerProduct, totalPrice } = item;
-      await TransactionItem.create({
-        transactionId: transaction.id,
-        productId,
-        quantity,
-        pricePerProduct,
+    for (const item of cartItems) {
+      await Transaction.create({
+        cashierId,
+        date: new Date(),
         totalPrice,
+        amount,
+        change,
+        productId: item.productId,
+        quantity: item.quantity,
+        pricePerProduct: item.price,
+        totalPrice: item.totalPrice,
       });
+      const product = await Product.findByPk(item.productId);
+      product.stock -= item.quantity;
+      await product.save();
     }
-
-    // Delete cart items
-    await Cart.destroy({ where: { cashierId } });
-
-    res.status(201).send({ transaction, change });
+    await Cart.destroy({ where: { cashierId, isChecked: true } });
+    res.status(201).send({ transaction: cartItems, change });
   } catch (error) {
     console.log(error);
     res
@@ -68,17 +52,35 @@ exports.getTransactions = async (req, res) => {
     const transactions = await Transaction.findAll({
       include: [
         {
-          model: TransactionItem,
-          include: Product,
+          model: Product,
         },
       ],
     });
 
-    // Return transaction data
-    res.send(transactions);
+    // Create sales report
+    let report = [];
+    for (const transaction of transactions) {
+      let transactionData = {
+        date: transaction.date,
+        cashierId: transaction.cashierId,
+        totalPrice: transaction.totalPrice,
+        amount: transaction.amount,
+        change: transaction.change,
+        product: {
+          name: transaction.Product.name,
+          quantity: transaction.quantity,
+          pricePerProduct: transaction.pricePerProduct,
+          totalPrice: transaction.totalPrice,
+        },
+      };
+      report.push(transactionData);
+    }
+
+    // Return sales report
+    res.send(report);
   } catch (error) {
     res
       .status(500)
-      .send({ error: "An error occurred while getting transaction data" });
+      .send({ error: "An error occurred while generating the sales report" });
   }
 };

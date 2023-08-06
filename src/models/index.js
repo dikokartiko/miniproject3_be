@@ -18,9 +18,9 @@ const Cart = CartModel(sequelize, Sequelize);
 User.associate({ Role });
 Role.associate({ User });
 Product.associate({ Category });
-Category.associate({ Product }); // Update this line
-Transaction.associate({ User, Cart }); // Add this line
-Cart.associate({ Product }); // Add this line
+Category.associate({ Product });
+Transaction.associate({ User, Product }); // Update this line
+Cart.associate({ Product });
 
 module.exports = {
   sequelize,
@@ -28,6 +28,6 @@ module.exports = {
   Role,
   Category,
   Product,
-  Transaction, // Add this line
-  Cart, // Add this line
+  Transaction,
+  Cart,
 };

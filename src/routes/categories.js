@@ -9,7 +9,7 @@ const {
 } = require("../controllers/categories");
 const validateRequest = require("../middleware/validateRequest");
 const isAdmin = require("../middleware/isAdmin");
-
+const authenticate = require("../middleware/authenticate");
 const router = express.Router();
 
 //create
@@ -45,7 +45,7 @@ router.put(
 //delete
 router.delete("/:id", isAdmin, deleteCategory);
 
-router.get("/all", isAdmin, getAllCategories);
-router.get("/", isAdmin, getCategoriesByStatus);
+router.get("/all", authenticate, getAllCategories);
+router.get("/", authenticate, getCategoriesByStatus);
 
 module.exports = router;

@@ -2,6 +2,7 @@
 const { Transaction, Cart, Product } = require("../models");
 const Sequelize = require("sequelize");
 const { Op } = Sequelize;
+
 exports.getSales = async (req, res) => {
   try {
     // Get query parameters for date range
@@ -18,36 +19,34 @@ exports.getSales = async (req, res) => {
     // Retrieve sales data from database
     const transactions = await Transaction.findAll({
       where: whereClause,
-      include: [
-        {
-          model: Cart,
-          include: Product,
-        },
-      ],
+      include: Product,
     });
 
-    // Aggregate sales data by date
-    let salesData = {};
+    // Create sales report
+    let report = [];
     for (const transaction of transactions) {
-      const date = transaction.date.toISOString().split("T")[0];
-      if (!salesData[date]) {
-        salesData[date] = 0;
-      }
-      salesData[date] += transaction.totalPrice;
+      let transactionData = {
+        date: transaction.date,
+        cashierId: transaction.cashierId,
+        totalPrice: transaction.totalPrice,
+        amount: transaction.amount,
+        change: transaction.change,
+        product: {
+          name: transaction.Product.name,
+          quantity: transaction.quantity,
+          pricePerProduct: transaction.pricePerProduct,
+          totalPrice: transaction.totalPrice,
+        },
+      };
+      report.push(transactionData);
     }
 
-    // Convert sales data to array of objects
-    salesData = Object.entries(salesData).map(([date, totalPrice]) => ({
-      date,
-      totalPrice,
-    }));
-    console.log(salesData);
-    // Return sales data
-    res.send(salesData);
+    // Return sales report
+    res.send(report);
   } catch (error) {
     console.log(error);
     res
       .status(500)
-      .send({ error: "An error occurred while getting sales data" });
+      .send({ error: "An error occurred while generating the sales report" });
   }
 };
