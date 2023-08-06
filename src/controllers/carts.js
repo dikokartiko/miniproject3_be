@@ -12,22 +12,25 @@ exports.addToCart = async (req, res) => {
         return res
           .status(404)
           .send({ error: "Product not found or not active" });
-      if (product.item < quantity)
+      if (product.stock < quantity)
         return res.status(400).send({ error: "Insufficient stock" });
       const totalPrice = product.price * quantity;
       let cartItem = await Cart.findOne({
-        where: { productId, cashierId, transactionId: null },
+        where: { productId, cashierId },
       });
       if (cartItem) {
         cartItem.quantity += quantity;
         cartItem.totalPrice += totalPrice;
+        cartItem.isChecked = false;
         await cartItem.save();
       } else {
         cartItem = await Cart.create({
           productId,
           quantity,
+          price: product.price,
           totalPrice,
           cashierId,
+          isChecked: false,
         });
       }
     }
@@ -38,16 +41,17 @@ exports.addToCart = async (req, res) => {
       .status(500)
       .send({ error: "An error occurred while adding to the cart" });
   }
-}; // refactor
+};
 
+// refactor
 exports.updateCart = async (req, res) => {
   const { items } = req.body;
   const cashierId = req.userId;
   try {
     for (const item of items) {
-      const { id, quantity, productId } = item;
+      const { id, quantity, isChecked } = item;
       const cartItem = await Cart.findOne({
-        where: { id, cashierId, transactionId: null },
+        where: { id, cashierId },
         include: Product,
       });
       if (!cartItem) {
@@ -57,28 +61,10 @@ exports.updateCart = async (req, res) => {
         // Delete cart item
         await cartItem.destroy();
       } else {
-        // Update quantity, total price, and product ID
+        // Update quantity, total price, and isChecked
         cartItem.quantity = quantity;
-        if (productId) {
-          // Check if new product is active and has sufficient stock
-          const newProduct = await Product.findByPk(productId);
-          if (!newProduct || !newProduct.status) {
-            return res
-              .status(404)
-              .send({ error: "New product not found or not active" });
-          }
-          if (newProduct.item < quantity) {
-            return res.status(400).send({ error: "Insufficient stock" });
-          }
-          cartItem.productId = productId;
-          cartItem.totalPrice = newProduct.price * quantity;
-        } else {
-          // Check if current product has sufficient stock
-          if (cartItem.Product.item < quantity) {
-            return res.status(400).send({ error: "Insufficient stock" });
-          }
-          cartItem.totalPrice = cartItem.Product.price * quantity;
-        }
+        cartItem.totalPrice = cartItem.price * quantity;
+        if (isChecked !== undefined) cartItem.isChecked = isChecked;
         await cartItem.save();
       }
     }

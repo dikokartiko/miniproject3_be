@@ -33,7 +33,7 @@ module.exports = {
           key: "id",
         },
       },
-      statusId: {
+      status: {
         type: Sequelize.INTEGER,
       },
       createdAt: {

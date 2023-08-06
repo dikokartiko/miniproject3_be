@@ -20,7 +20,7 @@ Role.associate({ User });
 Product.associate({ Category });
 Category.associate({ Product }); // Update this line
 Transaction.associate({ User, Cart }); // Add this line
-Cart.associate({ Product, Transaction }); // Add this line
+Cart.associate({ Product }); // Add this line
 
 module.exports = {
   sequelize,

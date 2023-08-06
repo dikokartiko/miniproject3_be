@@ -19,6 +19,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      price: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      isChecked: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       totalPrice: {
         type: Sequelize.FLOAT,
         allowNull: false,
@@ -27,13 +35,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: "Users",
-          key: "id",
-        },
-      },
-      transactionId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Transactions",
           key: "id",
         },
       },

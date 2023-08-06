@@ -3,7 +3,7 @@ const { Product, Category } = require("../models");
 const { Op } = require("sequelize");
 
 exports.createProduct = async (req, res) => {
-  const { name, price, categoryId, description, status, item } = req.body;
+  const { name, price, categoryId, description, status, stock } = req.body;
   const image = req.file ? req.file.path : null;
   try {
     const product = await Product.create({
@@ -13,7 +13,7 @@ exports.createProduct = async (req, res) => {
       categoryId,
       description,
       status,
-      item,
+      stock,
     });
     res.status(201).send(product);
   } catch (error) {
@@ -25,7 +25,7 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, price, categoryId, description, status, item } = req.body;
+  const { name, price, categoryId, description, status, stock } = req.body;
   const image = req.file ? req.file.path : null;
   try {
     const product = await Product.findByPk(id);
@@ -39,7 +39,7 @@ exports.updateProduct = async (req, res) => {
     if (categoryId) product.categoryId = categoryId;
     if (description) product.description = description;
     if (status) product.status = status;
-    if (item) product.item = item;
+    if (stock) product.stock = stock;
 
     await product.save();
     res.send(product);

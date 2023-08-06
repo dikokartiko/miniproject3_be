@@ -12,8 +12,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    isChecked: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     totalPrice: {
-      // Change this line
       type: DataTypes.FLOAT,
       allowNull: false,
     },
@@ -24,18 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         key: "id",
       },
     },
-    transactionId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "Transactions",
-        key: "id",
-      },
-    },
   });
 
   Cart.associate = (models) => {
     Cart.belongsTo(models.Product, { foreignKey: "productId" });
-    Cart.belongsTo(models.Transaction, { foreignKey: "transactionId" });
   };
 
   return Cart;

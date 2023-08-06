@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         key: "id",
       },
     },
-    statusId: {
+    status: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },

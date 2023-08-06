@@ -24,9 +24,9 @@ router.post(
       .isInt({ gt: 0 })
       .withMessage("Category ID must be a positive integer"),
     body("status")
-      .optional()
-      .isInt({ gt: 0 })
-      .withMessage("Status ID must be a positive integer"),
+    .optional()
+    .isBoolean()
+    .withMessage("status must be a boolean value"),
   ],
   // validateRequest,
   isAdmin,
@@ -49,9 +49,9 @@ router.put(
       .isInt({ gt: 0 })
       .withMessage("Category ID must be a positive integer"),
     body("status")
-      .optional()
-      .isInt({ gt: 0 })
-      .withMessage("Status ID must be a positive integer"),
+    .optional()
+    .isBoolean()
+    .withMessage("status must be a boolean value"),
   ],
   validateRequest,
   isAdmin,

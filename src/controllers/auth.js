@@ -14,7 +14,7 @@ exports.login = async (req, res) => {
     if (!user) {
       return res.status(404).send({ error: "User not found" });
     }
-    if (!user.statusId) {
+    if (!user.status) {
       return res.status(400).send({ error: "User is not active" });
     }
     if (!(await user.validPassword(password))) {

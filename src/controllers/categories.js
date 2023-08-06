@@ -17,7 +17,6 @@ exports.createCategory = async (req, res) => {
 exports.updateCategory = async (req, res) => {
   const { id } = req.params;
   const { name, status } = req.body;
-
   try {
     const category = await Category.findByPk(id);
     if (!category) {
@@ -25,7 +24,7 @@ exports.updateCategory = async (req, res) => {
     }
 
     if (name) category.name = name;
-    if (status) category.status = status;
+    if (status !== undefined) category.status = status;
 
     await category.save();
     res.send(category);
@@ -66,5 +65,24 @@ exports.getAllCategories = async (req, res) => {
     res
       .status(500)
       .send({ error: "An error occurred while getting all categories" });
+  }
+};
+
+exports.getCategoriesByStatus = async (req, res) => {
+  const { status } = req.query;
+  try {
+    let whereClause = {};
+    if (status !== undefined) {
+      whereClause.status = status === "true";
+    }
+    const categories = await Category.findAll({
+      where: whereClause,
+      include: Product,
+    });
+    res.send(categories);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "An error occurred while getting categories by status" });
   }
 };

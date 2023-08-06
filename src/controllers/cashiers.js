@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const { User, Role } = require("../models");
 
 exports.createCashier = async (req, res) => {
-  const { username, email, password, statusId } = req.body;
+  const { username, email, password, status } = req.body;
 
   try {
     const cashier = await User.create({
@@ -11,7 +11,7 @@ exports.createCashier = async (req, res) => {
       email,
       password,
       roleId: 2,
-      statusId,
+      status,
     });
     res.status(201).send(cashier);
   } catch (error) {
@@ -26,7 +26,7 @@ exports.createCashier = async (req, res) => {
 
 exports.updateCashier = async (req, res) => {
   const { id } = req.params;
-  const { username, email, password, statusId } = req.body;
+  const { username, email, password, status } = req.body;
 
   try {
     const cashier = await User.findByPk(id);
@@ -40,7 +40,7 @@ exports.updateCashier = async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       cashier.password = await bcrypt.hash(password, salt);
     }
-    if (statusId) cashier.statusId = statusId;
+    if (status !== undefined) cashier.status = status;
 
     await cashier.save();
     res.send(cashier);
@@ -73,11 +73,11 @@ exports.deleteCashier = async (req, res) => {
 };
 
 exports.getCashiers = async (req, res) => {
-  const { statusId } = req.query;
+  const { status } = req.query;
   try {
     let whereClause = { roleId: 2 };
-    if (statusId) {
-      whereClause.statusId = statusId;
+    if (status) {
+      whereClause.status = status;
     }
 
     const cashiers = await User.findAll({

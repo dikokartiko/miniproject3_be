@@ -2,13 +2,13 @@
 const { Transaction, Cart, Product } = require("../models");
 
 exports.createTransaction = async (req, res) => {
-  const { amount } = req.body;
+  const { amount, items } = req.body;
   const cashierId = req.userId;
 
   try {
     // Get cart items
     const cartItems = await Cart.findAll({
-      where: { cashierId, transactionId: null },
+      where: { cashierId },
       include: Product,
     });
 
@@ -38,21 +38,20 @@ exports.createTransaction = async (req, res) => {
       change,
     });
 
-    // Update cart items with transaction ID
-    for (const item of cartItems) {
-      item.transactionId = transaction.id;
-      await item.save();
-
-      // Decrease item count in Product model
-      const product = await Product.findByPk(item.productId);
-      if (product && product.item) {
-        product.item -= item.quantity;
-        await product.save();
-      }
+    // Create transaction items
+    for (const item of items) {
+      const { productId, quantity, pricePerProduct, totalPrice } = item;
+      await TransactionItem.create({
+        transactionId: transaction.id,
+        productId,
+        quantity,
+        pricePerProduct,
+        totalPrice,
+      });
     }
 
     // Delete cart items
-    await Cart.destroy({ where: { cashierId, transactionId: null } });
+    await Cart.destroy({ where: { cashierId } });
 
     res.status(201).send({ transaction, change });
   } catch (error) {
@@ -69,7 +68,7 @@ exports.getTransactions = async (req, res) => {
     const transactions = await Transaction.findAll({
       include: [
         {
-          model: Cart,
+          model: TransactionItem,
           include: Product,
         },
       ],

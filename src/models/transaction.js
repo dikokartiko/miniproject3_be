@@ -12,6 +12,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
+    productId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Products",
+        key: "id",
+      },
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    pricePerProduct: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
     totalPrice: {
       type: DataTypes.FLOAT,
       allowNull: false,
@@ -20,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
 
   Transaction.associate = (models) => {
     Transaction.belongsTo(models.User, { foreignKey: "cashierId" });
-    Transaction.hasMany(models.Cart, { foreignKey: "transactionId" });
   };
 
   return Transaction;

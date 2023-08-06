@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      item: {
+      stock: {
         type: Sequelize.STRING,
         allowNull: true,
       },

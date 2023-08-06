@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    item: {
+    stock: {
       type: DataTypes.STRING,
       allowNull: true,
     },
