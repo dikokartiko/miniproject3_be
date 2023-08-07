@@ -73,16 +73,32 @@ exports.deleteCashier = async (req, res) => {
 };
 
 exports.getCashiers = async (req, res) => {
-  const { status } = req.query;
+  const { status, sort } = req.query;
+  console.log("sortingsssss");
+  console.log(sort);
   try {
     let whereClause = { roleId: 2 };
     if (status) {
       whereClause.status = status;
     }
 
+    let orderClause = [];
+    if (sort) {
+      if (sort === "status_asc") {
+        orderClause.push(["status", "ASC"]);
+      } else if (sort === "status_desc") {
+        orderClause.push(["status", "DESC"]);
+      } else if (sort === "created_asc") {
+        orderClause.push(["createdAt", "ASC"]);
+      } else if (sort === "created_desc") {
+        orderClause.push(["createdAt", "DESC"]);
+      }
+    }
+
     const cashiers = await User.findAll({
       where: whereClause,
       include: [Role],
+      order: orderClause,
     });
 
     res.send(cashiers);

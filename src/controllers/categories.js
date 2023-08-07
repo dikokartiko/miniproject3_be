@@ -69,15 +69,28 @@ exports.getAllCategories = async (req, res) => {
 };
 
 exports.getCategoriesByStatus = async (req, res) => {
-  const { status } = req.query;
+  const { status, sort } = req.query;
+  console.log("ini testttttttttttttttttttttttttttt");
+  console.log(sort);
   try {
     let whereClause = {};
     if (status !== undefined) {
       whereClause.status = status === "true";
     }
+
+    let orderClause = [];
+    if (sort) {
+      if (sort === "created_asc") {
+        orderClause.push(["createdAt", "ASC"]);
+      } else if (sort === "created_desc") {
+        orderClause.push(["createdAt", "DESC"]);
+      }
+    }
+
     const categories = await Category.findAll({
       where: whereClause,
       include: Product,
+      order: orderClause,
     });
     res.send(categories);
   } catch (error) {

@@ -75,6 +75,10 @@ exports.getProducts = async (req, res) => {
       orderClause.push(["price", "ASC"]);
     } else if (sort === "price_desc") {
       orderClause.push(["price", "DESC"]);
+    } else if (sort === "created_asc") {
+      orderClause.push(["createdAt", "ASC"]);
+    } else if (sort === "created_desc") {
+      orderClause.push(["createdAt", "DESC"]);
     }
   }
 
