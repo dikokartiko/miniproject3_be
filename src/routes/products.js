@@ -5,6 +5,7 @@ const {
   createProduct,
   updateProduct,
   getProducts,
+  getProductImage,
 } = require("../controllers/products");
 const validateRequest = require("../middleware/validateRequest");
 const isAdmin = require("../middleware/isAdmin");
@@ -24,9 +25,9 @@ router.post(
       .isInt({ gt: 0 })
       .withMessage("Category ID must be a positive integer"),
     body("status")
-    .optional()
-    .isBoolean()
-    .withMessage("status must be a boolean value"),
+      .optional()
+      .isBoolean()
+      .withMessage("status must be a boolean value"),
   ],
   // validateRequest,
   isAdmin,
@@ -49,9 +50,9 @@ router.put(
       .isInt({ gt: 0 })
       .withMessage("Category ID must be a positive integer"),
     body("status")
-    .optional()
-    .isBoolean()
-    .withMessage("status must be a boolean value"),
+      .optional()
+      .isBoolean()
+      .withMessage("status must be a boolean value"),
   ],
   validateRequest,
   isAdmin,
@@ -60,4 +61,7 @@ router.put(
 );
 
 router.get("/", authenticate, getProducts);
+
+router.get("/image/:productId", getProductImage);
+
 module.exports = router;

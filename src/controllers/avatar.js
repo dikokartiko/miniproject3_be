@@ -37,4 +37,20 @@ exports.getProfilePicture = async (req, res) => {
   }
 };
 
-
+exports.getProfilePictureId = async (req, res) => {
+  const id = req.params.userId;
+  try {
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    if (!user.avatar) {
+      return res.status(404).send({ error: "Profile picture not found" });
+    }
+    res.sendFile(path.resolve(user.avatar));
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "An error occurred while getting the profile picture" });
+  }
+};

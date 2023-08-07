@@ -1,6 +1,8 @@
 // controllers/products.js
 const { Product, Category } = require("../models");
 const { Op } = require("sequelize");
+const fs = require("fs");
+const path = require("path");
 
 exports.createProduct = async (req, res) => {
   const { name, price, categoryId, description, status, stock } = req.body;
@@ -100,5 +102,26 @@ exports.getProducts = async (req, res) => {
     res
       .status(500)
       .send({ error: "An error occurred while getting the products" });
+  }
+};
+
+exports.getProductImage = async (req, res) => {
+  const id = req.params.productId;
+  try {
+    const product = await Product.findByPk(id);
+    const filePath = path.resolve(product.image);
+    if (!product) {
+      return res.status(404).send({ error: "Product not found" });
+    }
+    if (!product.image) {
+      return res.status(404).send({ error: "Product image not found" });
+    }
+    console.log(product.image);
+    fs.existsSync(path.resolve(product.image));
+    res.sendFile(path.resolve(product.image));
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "An error occurred while getting the product image" });
   }
 };
