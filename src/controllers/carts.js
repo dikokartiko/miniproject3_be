@@ -77,11 +77,33 @@ exports.updateCart = async (req, res) => {
   }
 };
 
-exports.getCart = async (req, res) => {
+exports.deleteCart = async (req, res) => {
+  const { id } = req.params;
   const cashierId = req.userId;
   try {
+    const cartItem = await Cart.findOne({
+      where: { id, cashierId },
+      include: Product,
+    });
+    if (!cartItem) {
+      return res.status(404).send({ error: "Cart item not found" });
+    } else {
+      await cartItem.destroy();
+    }
+    res.send({ message: "Cart items delete successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "An error occurred while deleting the cart" });
+  }
+};
+
+exports.getCart = async (req, res) => {
+  const cashierId = req.userId;
+  console.log(cashierId, "inicashier");
+  try {
     const cartItems = await Cart.findAll({
-      where: { cashierId, transactionId: null },
+      where: { cashierId, isChecked: false },
       include: Product,
     });
     res.send(cartItems);

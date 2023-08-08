@@ -1,6 +1,11 @@
 const express = require("express");
 const { body, param } = require("express-validator");
-const { addToCart, updateCart, getCart } = require("../controllers/carts");
+const {
+  addToCart,
+  updateCart,
+  getCart,
+  deleteCart,
+} = require("../controllers/carts");
 const validateRequest = require("../middleware/validateRequest");
 const authenticate = require("../middleware/authenticate");
 const router = express.Router();
@@ -44,7 +49,7 @@ router.put(
   authenticate,
   updateCart
 );
-
+router.delete("/delete/:id", authenticate, deleteCart);
 router.get("/", authenticate, getCart);
 
 module.exports = router;
