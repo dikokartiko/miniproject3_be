@@ -34,7 +34,6 @@ exports.updateProduct = async (req, res) => {
     if (!product) {
       return res.status(404).send({ error: "Product not found" });
     }
-
     if (name) product.name = name;
     if (image) product.image = image;
     if (price) product.price = price;
@@ -42,7 +41,6 @@ exports.updateProduct = async (req, res) => {
     if (description) product.description = description;
     if (status) product.status = status;
     if (stock) product.stock = stock;
-
     await product.save();
     res.send(product);
   } catch (error) {
@@ -52,10 +50,7 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-exports.getProducts = async (req, res) => {
-  const { page = 1, limit = 10, category, name, sort, status } = req.query;
-  const offset = (page - 1) * limit;
-
+const getWhereClause = (category, name, status) => {
   let whereClause = {};
   if (category) {
     whereClause.categoryId = category;
@@ -66,7 +61,10 @@ exports.getProducts = async (req, res) => {
   if (status) {
     whereClause.status = status;
   }
+  return whereClause;
+};
 
+const getOrderClause = (sort) => {
   let orderClause = [];
   if (sort) {
     if (sort === "name_asc") {
@@ -83,7 +81,14 @@ exports.getProducts = async (req, res) => {
       orderClause.push(["createdAt", "DESC"]);
     }
   }
+  return orderClause;
+};
 
+exports.getProducts = async (req, res) => {
+  const { page = 1, limit = 10, category, name, sort, status } = req.query;
+  const offset = (page - 1) * limit;
+  const whereClause = getWhereClause(category, name, status);
+  const orderClause = getOrderClause(sort);
   try {
     const products = await Product.findAndCountAll({
       where: whereClause,
@@ -92,7 +97,6 @@ exports.getProducts = async (req, res) => {
       offset,
       order: orderClause,
     });
-
     res.send({
       data: products.rows,
       currentPage: page,
@@ -116,7 +120,6 @@ exports.getProductImage = async (req, res) => {
     if (!product.image) {
       return res.status(404).send({ error: "Product image not found" });
     }
-    console.log(product.image);
     fs.existsSync(path.resolve(product.image));
     res.sendFile(path.resolve(product.image));
   } catch (error) {

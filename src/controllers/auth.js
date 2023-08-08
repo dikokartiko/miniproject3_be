@@ -84,7 +84,6 @@ exports.getUserData = async (req, res) => {
   if (!authHeader) {
     return res.status(401).send({ error: "Missing authorization header" });
   }
-
   const token = authHeader.split(" ")[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
