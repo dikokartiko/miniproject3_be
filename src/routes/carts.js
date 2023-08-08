@@ -36,10 +36,6 @@ router.put(
     body("items.*.quantity")
       .isInt({ gte: 0 })
       .withMessage("Quantity must be a non-negative integer"),
-    body("items.*.isChecked")
-      .optional()
-      .isBoolean()
-      .withMessage("isChecked must be a boolean value"),
     body("items.*.productId")
       .optional()
       .isInt({ gt: 0 })

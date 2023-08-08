@@ -16,10 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    isChecked: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
     totalPrice: {
       type: DataTypes.FLOAT,
       allowNull: false,

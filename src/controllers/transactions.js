@@ -6,7 +6,7 @@ exports.createTransaction = async (req, res) => {
   const cashierId = req.userId;
   try {
     const cartItems = await Cart.findAll({
-      where: { cashierId, isChecked: true },
+      where: { cashierId },
       include: Product,
     });
     let totalPrice = 0;
@@ -36,7 +36,7 @@ exports.createTransaction = async (req, res) => {
       product.stock -= item.quantity;
       await product.save();
     }
-    await Cart.destroy({ where: { cashierId, isChecked: true } });
+    await Cart.destroy({ where: { cashierId } });
     res.status(201).send({ transaction: cartItems, change });
   } catch (error) {
     console.log(error);

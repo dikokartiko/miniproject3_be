@@ -23,10 +23,6 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false,
       },
-      isChecked: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
       totalPrice: {
         type: Sequelize.FLOAT,
         allowNull: false,

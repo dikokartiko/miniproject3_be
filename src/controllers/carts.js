@@ -21,7 +21,6 @@ exports.addToCart = async (req, res) => {
       if (cartItem) {
         cartItem.quantity += quantity;
         cartItem.totalPrice += totalPrice;
-        cartItem.isChecked = false;
         await cartItem.save();
       } else {
         cartItem = await Cart.create({
@@ -30,7 +29,6 @@ exports.addToCart = async (req, res) => {
           price: product.price,
           totalPrice,
           cashierId,
-          isChecked: false,
         });
       }
     }
@@ -49,7 +47,7 @@ exports.updateCart = async (req, res) => {
   const cashierId = req.userId;
   try {
     for (const item of items) {
-      const { id, quantity, isChecked } = item;
+      const { id, quantity } = item;
       const cartItem = await Cart.findOne({
         where: { id, cashierId },
         include: Product,
@@ -61,10 +59,8 @@ exports.updateCart = async (req, res) => {
         // Delete cart item
         await cartItem.destroy();
       } else {
-        // Update quantity, total price, and isChecked
         cartItem.quantity = quantity;
         cartItem.totalPrice = cartItem.price * quantity;
-        if (isChecked !== undefined) cartItem.isChecked = isChecked;
         await cartItem.save();
       }
     }
@@ -100,10 +96,9 @@ exports.deleteCart = async (req, res) => {
 
 exports.getCart = async (req, res) => {
   const cashierId = req.userId;
-  console.log(cashierId, "inicashier");
   try {
     const cartItems = await Cart.findAll({
-      where: { cashierId, isChecked: false },
+      where: { cashierId },
       include: Product,
     });
     res.send(cartItems);
