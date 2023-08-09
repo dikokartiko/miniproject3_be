@@ -2,12 +2,8 @@ const { Transaction, Product, Report } = require("../models");
 const Sequelize = require("sequelize");
 const { Op } = Sequelize;
 
-exports.generateSalesReport = async (req, res) => {
-  try {
-    const { startDate, endDate } = req.body; // Change this line
-
-    // Query transactions within date range
-    const transactions = await Transaction.findAll({
+const getTransactions = async (startDate, endDate) => {
+    return await Transaction.findAll({
       where: {
         date: {
           [Op.between]: [new Date(startDate), new Date(endDate)],
@@ -15,29 +11,40 @@ exports.generateSalesReport = async (req, res) => {
       },
       include: Product,
     });
-
-    // Create report
-    for (const transaction of transactions) {
-      await Report.create({
-        cashierId: transaction.cashierId,
-        startDate,
-        endDate,
-        productId: transaction.productId,
-        productName: transaction.Product.name,
-        quantity: transaction.quantity,
-        pricePerProduct: transaction.pricePerProduct,
-        totalPrice: transaction.totalPrice,
-      });
+  };
+  
+  const createReport = async (transaction, startDate, endDate) => {
+    await Report.create({
+      cashierId: transaction.cashierId,
+      startDate,
+      endDate,
+      productId: transaction.productId,
+      productName: transaction.Product.name,
+      quantity: transaction.quantity,
+      pricePerProduct: transaction.pricePerProduct,
+      totalPrice: transaction.totalPrice,
+    });
+  };
+  
+  exports.generateSalesReport = async (req, res) => {
+    try {
+      const { startDate, endDate } = req.body;
+      const transactions = await getTransactions(startDate, endDate);
+  
+      // Create report
+      for (const transaction of transactions) {
+        await createReport(transaction, startDate, endDate);
+      }
+  
+      res.send({ message: "Sales report generated successfully" });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(500)
+        .send({ error: "An error occurred while generating the sales report" });
     }
-
-    res.send({ message: "Sales report generated successfully" });
-  } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .send({ error: "An error occurred while generating the sales report" });
-  }
-};
+  };
+  
 
 exports.getSalesReport = async (req, res) => {
   try {
